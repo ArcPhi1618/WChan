@@ -1,6 +1,8 @@
-name = "wonderland-archives"
-pages_build_output_dir = "dist"
+name = "wonderchan"
 compatibility_date = "2024-01-01"
+
+[assets]
+directory = "./dist"
 
 # Cloudflare D1 Database Binding
 [[d1_databases]]
