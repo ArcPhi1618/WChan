@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-pixel: 'DotGothic16', 'PixelMplus10', 'PixelMplus12', 'VT323', monospace;
+    --font-heading: 'Press Start 2P', 'DotGothic16', monospace;
+  }
+
+  body {
+    font-family: var(--font-pixel);
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: unset;
+    font-smooth: never;
+    letter-spacing: 0.02em;
+    image-rendering: pixelated;
+  }
+}
+
+/* Custom 16-Bit Pixel Utilities */
+.font-pixel {
+  font-family: var(--font-pixel);
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-jp-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+
+/* 16-bit Retro Pixel Box Shadows and Crisp Pastel Borders */
+.pixel-border-light {
+  box-shadow: 
+    -2px 0 0 0 #f4b8e4,
+     2px 0 0 0 #f4b8e4,
+     0 -2px 0 0 #f4b8e4,
+     0  2px 0 0 #f4b8e4;
+}
+
+.pixel-border-inset {
+  border: 2px solid #f4b8e4;
+  border-right-color: #fdf2f8;
+  border-bottom-color: #fdf2f8;
+  border-top-color: #cba6f7;
+  border-left-color: #cba6f7;
+}
+
+.pixel-border-outset {
+  border: 2px solid #e8a2d5;
+  border-right-color: #b388dd;
+  border-bottom-color: #b388dd;
+  border-top-color: #fce7f3;
+  border-left-color: #fce7f3;
+}
+
+.dark .pixel-border-inset {
+  border: 2px solid #4a2b60;
+  border-right-color: #7d48a0;
+  border-bottom-color: #7d48a0;
+  border-top-color: #241335;
+  border-left-color: #241335;
+}
+
+.dark .pixel-border-outset {
+  border: 2px solid #5b3576;
+  border-right-color: #201030;
+  border-bottom-color: #201030;
+  border-top-color: #8b5aa8;
+  border-left-color: #8b5aa8;
+}
+
+/* 4chan Greentext Styling - Pastel Mint */
+.greentext {
+  color: #40a02b;
+}
+
+.dark .greentext {
+  color: #a6e3a1;
+}
+
+/* Needy Streamer Pastel CRT Scanline Overlay */
+.scanlines {
+  background: linear-gradient(
+    rgba(244, 184, 228, 0.03) 50%, 
+    rgba(24, 20, 37, 0.18) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+}
+
+/* Custom Scrollbar for Pastel Kawaii feel */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fce7f3;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1e132b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f4b8e4;
+  border: 2px solid #fbcfe8;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #cba6f7;
+  border: 2px solid #2e1844;
+}
+
+/* Pixel Canvas cursor */
+.cursor-pixel-draw {
+  cursor: crosshair;
+}
+
+
