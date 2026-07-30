@@ -1,9 +1,9 @@
 name = "wonderland-archives"
-compatibility_date = "2024-01-01"
 pages_build_output_dir = "dist"
+compatibility_date = "2024-01-01"
 
 # Cloudflare D1 Database Binding
 [[d1_databases]]
 binding = "DB"
 database_name = "journal_db"
-database_id = "f89f2766-65a7-4034-83af-263c0e8de51a" # Replace with the database ID from `npx wrangler d1 create journal_db`
+database_id = "f89f2766-65a7-4034-83af-263c0e8de51a"
