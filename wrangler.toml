@@ -6,4 +6,4 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "journal_db"
-database_id = "YOUR_D1_DATABASE_ID_HERE" # Replace with the database ID from `npx wrangler d1 create journal_db`
+database_id = "f89f2766-65a7-4034-83af-263c0e8de51a" # Replace with the database ID from `npx wrangler d1 create journal_db`
