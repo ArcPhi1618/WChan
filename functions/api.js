@@ -1,7 +1,21 @@
 // functions/api.js
 
 export async function onRequest(context) {
-  // 1. Get D1 binding safely from context
+  const method = context.request.method;
+
+  // 1. Handle CORS pre-flight requests immediately
+  if (method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+      }
+    });
+  }
+
+  // 2. Get D1 binding safely from context
   const DB = context.env.DB;
 
   if (!DB) {
@@ -9,32 +23,16 @@ export async function onRequest(context) {
       JSON.stringify({ error: "D1 Binding not found. Check dashboard setup!" }),
       {
         status: 500,
-        headers: { "Content-Type": "application/json" }
+        headers: { 
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
       }
     );
   }
 
   try {
-    // Auto-create table if not existing
-    await DB.prepare(`
-      CREATE TABLE IF NOT EXISTS posts (
-        id INTEGER PRIMARY KEY,
-        threadId INTEGER,
-        subject TEXT,
-        name TEXT,
-        tripcode TEXT,
-        timestamp TEXT,
-        content TEXT,
-        category TEXT,
-        attachment TEXT,
-        isSticky INTEGER,
-        isClosed INTEGER,
-        isVerticalText INTEGER
-      )
-    `).run();
-
-    const method = context.request.method;
-
+    // 3. Handle GET Requests (Fetch all posts)
     if (method === "GET") {
       const { results } = await DB.prepare("SELECT * FROM posts ORDER BY id DESC").all();
       const formattedPosts = (results || []).map((p) => ({
@@ -49,17 +47,23 @@ export async function onRequest(context) {
         JSON.stringify({ success: true, results: formattedPosts, posts: formattedPosts }),
         {
           status: 200,
-          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+          headers: { 
+            "Content-Type": "application/json", 
+            "Access-Control-Allow-Origin": "*" 
+          }
         }
       );
     }
 
+    // 4. Handle POST Requests (Create, Update, Delete)
     if (method === "POST") {
       const body = await context.request.json();
 
+      // Action: Delete Post or Thread
       if (body.action === "delete" && body.id) {
         const targetId = body.id;
         const { results } = await DB.prepare("SELECT * FROM posts WHERE id = ?").bind(targetId).all();
+        
         if (results && results.length > 0) {
           const target = results[0];
           if (target.id === target.threadId) {
@@ -70,20 +74,28 @@ export async function onRequest(context) {
         }
         return new Response(JSON.stringify({ success: true }), {
           status: 200,
-          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+          headers: { 
+            "Content-Type": "application/json", 
+            "Access-Control-Allow-Origin": "*" 
+          }
         });
       }
 
+      // Action: Update Timestamp
       if (body.action === "updateTimestamp" && body.id && body.timestamp) {
         await DB.prepare("UPDATE posts SET timestamp = ? WHERE id = ?")
           .bind(body.timestamp, body.id)
           .run();
         return new Response(JSON.stringify({ success: true }), {
           status: 200,
-          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+          headers: { 
+            "Content-Type": "application/json", 
+            "Access-Control-Allow-Origin": "*" 
+          }
         });
       }
 
+      // Action: Upsert Post (Insert or Update on conflict)
       const post = body.post || body;
       if (post && post.id) {
         await DB.prepare(`
@@ -118,21 +130,37 @@ export async function onRequest(context) {
 
         return new Response(JSON.stringify({ success: true, post }), {
           status: 200,
-          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+          headers: { 
+            "Content-Type": "application/json", 
+            "Access-Control-Allow-Origin": "*" 
+          }
         });
       }
 
       return new Response(JSON.stringify({ error: "Invalid post payload" }), {
         status: 400,
-        headers: { "Content-Type": "application/json" }
+        headers: { 
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
       });
     }
 
-    return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405 });
+    // 5. Catch unsupported methods
+    return new Response(JSON.stringify({ error: "Method not allowed" }), { 
+      status: 405,
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      }
+    });
+
   } catch (err) {
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
-      headers: { "Content-Type": "application/json" }
+      headers: { 
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      }
     });
   }
 }

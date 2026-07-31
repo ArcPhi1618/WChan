@@ -8,6 +8,7 @@ interface FooterProps {
   onResetData: () => void;
   onClearAllData?: () => void;
   sfxEnabled?: boolean;
+  isGuest?: boolean;
 }
 
 export const Footer: React.FC<FooterProps> = ({
@@ -15,7 +16,8 @@ export const Footer: React.FC<FooterProps> = ({
   onImportData,
   onResetData,
   onClearAllData,
-  sfxEnabled = true
+  sfxEnabled = true,
+  isGuest = false
 }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -47,65 +49,67 @@ export const Footer: React.FC<FooterProps> = ({
           </p>
         </div>
 
-        {/* Middle Backup & Restore Actions */}
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          <button
-            onClick={() => {
-              if (sfxEnabled) soundFx.playClick();
-              onExportData();
-            }}
-            className="px-2.5 py-1 bg-pink-100 dark:bg-[#28183d] hover:bg-pink-300 hover:text-slate-950 pixel-border-outset flex items-center gap-1 cursor-pointer font-bold transition-colors"
-          >
-            <Download className="w-3 h-3 text-pink-600 dark:text-pink-300" />
-            <span>Export Journal (.json)</span>
-          </button>
-
-          <button
-            onClick={() => {
-              if (sfxEnabled) soundFx.playClick();
-              fileInputRef.current?.click();
-            }}
-            className="px-2.5 py-1 bg-pink-100 dark:bg-[#28183d] hover:bg-pink-300 hover:text-slate-950 pixel-border-outset flex items-center gap-1 cursor-pointer font-bold transition-colors"
-          >
-            <Upload className="w-3 h-3 text-purple-600 dark:text-purple-300" />
-            <span>Import Backup</span>
-          </button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept=".json"
-            className="hidden"
-          />
-
-          <button
-            onClick={() => {
-              if (sfxEnabled) soundFx.playClick();
-              if (confirm('Reset journal board back to default sample posts?')) {
-                onResetData();
-              }
-            }}
-            className="px-2.5 py-1 bg-pink-100 dark:bg-[#28183d] hover:bg-purple-800 hover:text-pink-100 pixel-border-outset flex items-center gap-1 cursor-pointer font-bold transition-colors"
-          >
-            <RotateCcw className="w-3 h-3 text-pink-600 dark:text-pink-300" />
-            <span>Reset Samples</span>
-          </button>
-
-          {onClearAllData && (
+        {/* Middle Backup & Restore Actions - Hidden in Guest Mode */}
+        {!isGuest && (
+          <div className="flex flex-wrap items-center justify-center gap-2">
             <button
               onClick={() => {
                 if (sfxEnabled) soundFx.playClick();
-                if (confirm('Are you sure you want to delete ALL posts and clear the board?')) {
-                  onClearAllData();
+                onExportData();
+              }}
+              className="px-2.5 py-1 bg-pink-100 dark:bg-[#28183d] hover:bg-pink-300 hover:text-slate-950 pixel-border-outset flex items-center gap-1 cursor-pointer font-bold transition-colors"
+            >
+              <Download className="w-3 h-3 text-pink-600 dark:text-pink-300" />
+              <span>Export Journal (.json)</span>
+            </button>
+
+            <button
+              onClick={() => {
+                if (sfxEnabled) soundFx.playClick();
+                fileInputRef.current?.click();
+              }}
+              className="px-2.5 py-1 bg-pink-100 dark:bg-[#28183d] hover:bg-pink-300 hover:text-slate-950 pixel-border-outset flex items-center gap-1 cursor-pointer font-bold transition-colors"
+            >
+              <Upload className="w-3 h-3 text-purple-600 dark:text-purple-300" />
+              <span>Import Backup</span>
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept=".json"
+              className="hidden"
+            />
+
+            <button
+              onClick={() => {
+                if (sfxEnabled) soundFx.playClick();
+                if (confirm('Reset journal board back to default sample posts?')) {
+                  onResetData();
                 }
               }}
-              className="px-2.5 py-1 bg-pink-100 dark:bg-[#28183d] hover:bg-rose-600 hover:text-white pixel-border-outset flex items-center gap-1 cursor-pointer font-bold transition-colors"
+              className="px-2.5 py-1 bg-pink-100 dark:bg-[#28183d] hover:bg-purple-800 hover:text-pink-100 pixel-border-outset flex items-center gap-1 cursor-pointer font-bold transition-colors"
             >
-              <Trash2 className="w-3 h-3 text-rose-500" />
-              <span>Clear All Posts</span>
+              <RotateCcw className="w-3 h-3 text-pink-600 dark:text-pink-300" />
+              <span>Reset Samples</span>
             </button>
-          )}
-        </div>
+
+            {onClearAllData && (
+              <button
+                onClick={() => {
+                  if (sfxEnabled) soundFx.playClick();
+                  if (confirm('Are you sure you want to delete ALL posts and clear the board?')) {
+                    onClearAllData();
+                  }
+                }}
+                className="px-2.5 py-1 bg-pink-100 dark:bg-[#28183d] hover:bg-rose-600 hover:text-white pixel-border-outset flex items-center gap-1 cursor-pointer font-bold transition-colors"
+              >
+                <Trash2 className="w-3 h-3 text-rose-500" />
+                <span>Clear All Posts</span>
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Right font credit */}
         <div className="text-[10px] text-purple-700/80 dark:text-pink-300/70 text-center md:text-right font-mono">

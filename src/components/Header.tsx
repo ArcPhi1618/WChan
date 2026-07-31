@@ -15,7 +15,8 @@ import {
   Feather,
   Palette,
   Music,
-  Quote
+  Quote,
+  KeyRound
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -33,6 +34,9 @@ interface HeaderProps {
   searchQuery: string;
   onSearchChange: (q: string) => void;
   postCount: number;
+  isGuest?: boolean;
+  currentUser?: string;
+  onOpenLoginModal?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -49,7 +53,10 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenNewPost,
   searchQuery,
   onSearchChange,
-  postCount
+  postCount,
+  isGuest = false,
+  currentUser = 'User',
+  onOpenLoginModal
 }) => {
   const [clockStr, setClockStr] = useState<string>('');
 
@@ -97,6 +104,42 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="hidden sm:inline text-cyan-300 font-mono">: 🌸 | MOOD: 1.618% | [{postCount} POSTS]</span>
         </div>
         <div className="flex items-center gap-4 text-xs font-mono">
+          {/* User / Guest Status Badge */}
+          {isGuest ? (
+            <div className="flex items-center gap-2">
+              <span className="text-amber-300 font-pixel font-bold flex items-center gap-1 bg-amber-950/80 px-2 py-0.5 border border-amber-600">
+                👻 GUEST MODE
+              </span>
+              {onOpenLoginModal && (
+                <button
+                  onClick={() => {
+                    if (sfxEnabled) soundFx.playClick();
+                    onOpenLoginModal();
+                  }}
+                  className="px-2 py-0.5 bg-pink-400 hover:bg-pink-300 text-slate-950 font-bold font-pixel cursor-pointer text-[10px] transition-colors"
+                >
+                  🔑 LOG IN
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="text-pink-300 font-pixel font-bold flex items-center gap-1 bg-purple-900/80 px-2 py-0.5 border border-purple-700">
+                🌸 {currentUser}
+              </span>
+              {onOpenLoginModal && (
+                <button
+                  onClick={() => {
+                    if (sfxEnabled) soundFx.playClick();
+                    onOpenLoginModal();
+                  }}
+                  className="px-2 py-0.5 bg-purple-900 hover:bg-purple-800 text-pink-200 font-pixel cursor-pointer text-[10px] transition-colors border border-purple-700"
+                >
+                  SWITCH
+                </button>
+              )}
+            </div>
+          )}
           <span className="text-purple-300 font-pixel">{clockStr || '2026-07-29(水) 22:15:44'}</span>
         </div>
       </div>
@@ -118,7 +161,7 @@ export const Header: React.FC<HeaderProps> = ({
             </p>
           </div>
 
-          {/* Top Actions: Dark mode, SFX, Scanlines, New Post */}
+          {/* Top Actions: Dark mode, SFX, Scanlines, New Post & Log In */}
           <div className="flex flex-wrap items-center justify-center gap-2 font-pixel text-xs">
             {/* New Post Button */}
             <button
@@ -131,6 +174,30 @@ export const Header: React.FC<HeaderProps> = ({
               <PlusCircle className="w-4 h-4 text-slate-950" />
               <span>投稿 [NEW POST]</span>
             </button>
+
+            {/* Log In / User Switch Button */}
+            {onOpenLoginModal && (
+              <button
+                onClick={() => {
+                  if (sfxEnabled) soundFx.playClick();
+                  onOpenLoginModal();
+                }}
+                className={`px-3 py-1.5 font-bold pixel-border-outset flex items-center gap-1.5 transition-colors cursor-pointer ${
+                  isGuest
+                    ? 'bg-purple-900 hover:bg-purple-800 text-pink-200 border border-purple-700'
+                    : 'bg-pink-200 dark:bg-purple-900/90 text-purple-950 dark:text-pink-100 hover:bg-pink-300'
+                }`}
+              >
+                <KeyRound className="w-4 h-4" />
+                <span>
+                  {isGuest 
+                    ? 'ログイン [LOG IN]' 
+                    : currentUser.toLowerCase().includes('rabbit') 
+                    ? `🐰 ${currentUser}` 
+                    : `🌸 ${currentUser}`}
+                </span>
+              </button>
+            )}
 
             {/* Dark Mode Toggle */}
             <button

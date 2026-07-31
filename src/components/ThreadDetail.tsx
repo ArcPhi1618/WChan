@@ -2,7 +2,7 @@ import React from 'react';
 import { Thread, Post } from '../types';
 import { PostCard } from './PostCard';
 import { soundFx } from '../lib/sound';
-import { ArrowLeft, MessageSquarePlus, RefreshCw } from 'lucide-react';
+import { ArrowLeft, MessageSquarePlus, RefreshCw, KeyRound } from 'lucide-react';
 
 interface ThreadDetailProps {
   thread: Thread;
@@ -12,6 +12,7 @@ interface ThreadDetailProps {
   onEditTimestamp?: (postId: number, newTimestamp: string) => void;
   onDeletePost?: (postId: number) => void;
   sfxEnabled?: boolean;
+  isGuest?: boolean;
 }
 
 export const ThreadDetail: React.FC<ThreadDetailProps> = ({
@@ -21,7 +22,8 @@ export const ThreadDetail: React.FC<ThreadDetailProps> = ({
   onHoverQuotePost,
   onEditTimestamp,
   onDeletePost,
-  sfxEnabled = true
+  sfxEnabled = true,
+  isGuest = false
 }) => {
   return (
     <div className="w-full max-w-5xl mx-auto p-4 font-pixel">
@@ -47,10 +49,23 @@ export const ThreadDetail: React.FC<ThreadDetailProps> = ({
             if (sfxEnabled) soundFx.playClick();
             onOpenReplyModal(thread.opPost.threadId, thread.opPost.id);
           }}
-          className="px-3 py-1.5 bg-pink-400 hover:bg-pink-300 active:bg-pink-500 text-slate-950 font-bold pixel-border-outset text-xs flex items-center gap-1.5 cursor-pointer shadow-[0_0_8px_rgba(244,184,228,0.5)]"
+          className={`px-3 py-1.5 font-bold pixel-border-outset text-xs flex items-center gap-1.5 cursor-pointer ${
+            isGuest
+              ? 'bg-purple-900 hover:bg-purple-800 text-pink-200 border border-purple-700'
+              : 'bg-pink-400 hover:bg-pink-300 active:bg-pink-500 text-slate-950 shadow-[0_0_8px_rgba(244,184,228,0.5)]'
+          }`}
         >
-          <MessageSquarePlus className="w-3.5 h-3.5 text-slate-950" />
-          <span>Post Reply [返信]</span>
+          {isGuest ? (
+            <>
+              <KeyRound className="w-3.5 h-3.5 text-pink-300" />
+              <span>🔑 Log in to Reply</span>
+            </>
+          ) : (
+            <>
+              <MessageSquarePlus className="w-3.5 h-3.5 text-slate-950" />
+              <span>Post Reply [返信]</span>
+            </>
+          )}
         </button>
       </div>
 
@@ -63,6 +78,7 @@ export const ThreadDetail: React.FC<ThreadDetailProps> = ({
         onEditTimestamp={onEditTimestamp}
         onDeletePost={onDeletePost}
         sfxEnabled={sfxEnabled}
+        isGuest={isGuest}
       />
 
       {/* Replies */}
@@ -77,6 +93,7 @@ export const ThreadDetail: React.FC<ThreadDetailProps> = ({
             onEditTimestamp={onEditTimestamp}
             onDeletePost={onDeletePost}
             sfxEnabled={sfxEnabled}
+            isGuest={isGuest}
           />
         ))}
       </div>
@@ -98,10 +115,23 @@ export const ThreadDetail: React.FC<ThreadDetailProps> = ({
             if (sfxEnabled) soundFx.playClick();
             onOpenReplyModal(thread.opPost.threadId, thread.opPost.id);
           }}
-          className="px-4 py-1.5 bg-pink-400 hover:bg-pink-300 active:bg-pink-500 text-slate-950 font-bold pixel-border-outset cursor-pointer flex items-center gap-1.5 shadow-[0_0_8px_rgba(244,184,228,0.5)]"
+          className={`px-4 py-1.5 font-bold pixel-border-outset cursor-pointer flex items-center gap-1.5 ${
+            isGuest
+              ? 'bg-purple-900 hover:bg-purple-800 text-pink-200 border border-purple-700'
+              : 'bg-pink-400 hover:bg-pink-300 active:bg-pink-500 text-slate-950 shadow-[0_0_8px_rgba(244,184,228,0.5)]'
+          }`}
         >
-          <MessageSquarePlus className="w-3.5 h-3.5 text-slate-950" />
-          <span>Quick Reply to Thread</span>
+          {isGuest ? (
+            <>
+              <KeyRound className="w-3.5 h-3.5 text-pink-300" />
+              <span>🔑 Log in to Reply</span>
+            </>
+          ) : (
+            <>
+              <MessageSquarePlus className="w-3.5 h-3.5 text-slate-950" />
+              <span>Quick Reply to Thread</span>
+            </>
+          )}
         </button>
       </div>
     </div>

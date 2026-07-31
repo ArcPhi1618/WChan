@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BoardCategory, Attachment, Post } from '../types';
 import { parseNameAndTripcode, formatPostTimestamp } from '../lib/tripcode';
 import { soundFx } from '../lib/sound';
@@ -29,6 +29,9 @@ interface PostFormModalProps {
   currentAttachment?: Attachment | null;
   onClearAttachment: () => void;
   sfxEnabled?: boolean;
+  currentUser?: string;
+  isGuest?: boolean;
+  onOpenLoginModal?: () => void;
 }
 
 export const PostFormModal: React.FC<PostFormModalProps> = ({
@@ -42,9 +45,18 @@ export const PostFormModal: React.FC<PostFormModalProps> = ({
   onOpenChiptuneStudio,
   currentAttachment,
   onClearAttachment,
-  sfxEnabled = true
+  sfxEnabled = true,
+  currentUser = 'Alice',
+  isGuest = false,
+  onOpenLoginModal
 }) => {
-  const [nameInput, setNameInput] = useState<string>('Anonymous');
+  const [nameInput, setNameInput] = useState<string>(currentUser || 'Alice');
+
+  useEffect(() => {
+    if (isOpen && currentUser) {
+      setNameInput(currentUser);
+    }
+  }, [isOpen, currentUser]);
   const [subjectInput, setSubjectInput] = useState<string>('');
   const [category, setCategory] = useState<BoardCategory>(defaultCategory === 'all' ? 'poem' : defaultCategory);
   const [customTimestamp, setCustomTimestamp] = useState<string>(formatPostTimestamp());
@@ -79,6 +91,12 @@ export const PostFormModal: React.FC<PostFormModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isGuest) {
+      alert('Guest mode cannot submit posts or replies. Please log in.');
+      onClose();
+      if (onOpenLoginModal) onOpenLoginModal();
+      return;
+    }
     if (!content.trim() && !currentAttachment && !imageUrlInput && !quoteCardText) {
       alert('Please enter post text or attach media!');
       return;
@@ -392,13 +410,26 @@ export const PostFormModal: React.FC<PostFormModalProps> = ({
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-6 py-1.5 bg-pink-400 hover:bg-pink-300 text-slate-950 font-bold pixel-border-outset text-xs flex items-center gap-1.5 cursor-pointer shadow-[0_0_10px_rgba(244,184,228,0.5)]"
-            >
-              <Send className="w-4 h-4 text-slate-950" />
-              <span>Submit Post [送信]</span>
-            </button>
+            {isGuest ? (
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  if (onOpenLoginModal) onOpenLoginModal();
+                }}
+                className="px-6 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold pixel-border-outset text-xs flex items-center gap-1.5 cursor-pointer shadow-[0_0_10px_rgba(245,158,11,0.5)]"
+              >
+                <span>🔑 LOG IN TO SUBMIT POST</span>
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="px-6 py-1.5 bg-pink-400 hover:bg-pink-300 text-slate-950 font-bold pixel-border-outset text-xs flex items-center gap-1.5 cursor-pointer shadow-[0_0_10px_rgba(244,184,228,0.5)]"
+              >
+                <Send className="w-4 h-4 text-slate-950" />
+                <span>Submit Post [送信]</span>
+              </button>
+            )}
           </div>
         </form>
       </div>

@@ -23,6 +23,7 @@ interface PostCardProps {
   onEditTimestamp?: (postId: number, newTimestamp: string) => void;
   onDeletePost?: (postId: number) => void;
   sfxEnabled?: boolean;
+  isGuest?: boolean;
 }
 
 export const PostCard: React.FC<PostCardProps> = ({
@@ -32,7 +33,8 @@ export const PostCard: React.FC<PostCardProps> = ({
   onHoverQuotePost,
   onEditTimestamp,
   onDeletePost,
-  sfxEnabled = true
+  sfxEnabled = true,
+  isGuest = false
 }) => {
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
   const [isCopied, setIsCopied] = useState<boolean>(false);
@@ -151,7 +153,7 @@ export const PostCard: React.FC<PostCardProps> = ({
         {/* Visible & Customizable Timestamp */}
         <div className="flex items-center gap-1 text-purple-800 dark:text-pink-300 font-mono text-[11px] ml-auto sm:ml-0">
           <Clock className="w-3 h-3 text-pink-400 dark:text-pink-400" />
-          {isEditingTime ? (
+          {isEditingTime && !isGuest ? (
             <div className="flex items-center gap-1">
               <input
                 type="text"
@@ -168,12 +170,12 @@ export const PostCard: React.FC<PostCardProps> = ({
             </div>
           ) : (
             <span
-              onClick={() => setIsEditingTime(true)}
-              title="Click to customize post timestamp"
-              className="hover:underline cursor-pointer flex items-center gap-0.5"
+              onClick={() => !isGuest && setIsEditingTime(true)}
+              title={isGuest ? 'Timestamp' : 'Click to customize post timestamp'}
+              className={`flex items-center gap-0.5 ${!isGuest ? 'hover:underline cursor-pointer' : ''}`}
             >
               {post.timestamp}
-              <Edit3 className="w-2.5 h-2.5 text-pink-400 hover:text-pink-600 ml-0.5" />
+              {!isGuest && <Edit3 className="w-2.5 h-2.5 text-pink-400 hover:text-pink-600 ml-0.5" />}
             </span>
           )}
         </div>
@@ -195,7 +197,7 @@ export const PostCard: React.FC<PostCardProps> = ({
             {isCopied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3 text-pink-400" />}
           </button>
 
-          {onDeletePost && (
+          {!isGuest && onDeletePost && (
             <button
               onClick={() => {
                 if (sfxEnabled) soundFx.playClick();
@@ -294,13 +296,22 @@ export const PostCard: React.FC<PostCardProps> = ({
 
       {/* Reply Action footer */}
       <div className="mt-2 pt-1 border-t border-pink-200 dark:border-purple-800/60 flex justify-end items-center gap-2 text-[11px]">
-        <button
-          onClick={() => onReplyToPost(post.id)}
-          className="text-pink-600 dark:text-pink-300 font-bold hover:underline cursor-pointer flex items-center gap-1"
-        >
-          <MessageSquare className="w-3 h-3" />
-          <span>Reply [&gt;&gt;No.{post.id}]</span>
-        </button>
+        {isGuest ? (
+          <button
+            onClick={() => onReplyToPost(post.id)}
+            className="text-pink-600/90 dark:text-pink-300/90 font-bold hover:underline cursor-pointer flex items-center gap-1 text-[11px]"
+          >
+            <span>🔑 Log in to Reply</span>
+          </button>
+        ) : (
+          <button
+            onClick={() => onReplyToPost(post.id)}
+            className="text-pink-600 dark:text-pink-300 font-bold hover:underline cursor-pointer flex items-center gap-1"
+          >
+            <MessageSquare className="w-3 h-3" />
+            <span>Reply [&gt;&gt;No.{post.id}]</span>
+          </button>
+        )}
       </div>
     </div>
   );

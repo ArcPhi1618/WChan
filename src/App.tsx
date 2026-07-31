@@ -8,10 +8,48 @@ import { ThreadDetail } from './components/ThreadDetail';
 import { PostFormModal } from './components/PostFormModal';
 import { PixelCanvasModal } from './components/PixelCanvasModal';
 import { ChiptuneStudioModal } from './components/ChiptuneStudioModal';
+import { LoginModal } from './components/LoginModal';
 import { Footer } from './components/Footer';
 import { soundFx } from './lib/sound';
 
 export default function App() {
+  // Login / Guest State (Guest mode default on initial load)
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+  const [isGuest, setIsGuest] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('wonderland_is_guest');
+      if (saved !== null) return JSON.parse(saved);
+    } catch {}
+    return true; // Default to guest mode on initial launch
+  });
+  const [currentUser, setCurrentUser] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem('wonderland_user');
+      if (saved) return saved;
+    } catch {}
+    return 'Guest';
+  });
+
+  const handleLogin = (username: string) => {
+    const cleanUser = username.trim() || 'Alice';
+    setCurrentUser(cleanUser);
+    setIsGuest(false);
+    setIsLoginModalOpen(false);
+    try {
+      localStorage.setItem('wonderland_is_guest', 'false');
+      localStorage.setItem('wonderland_user', cleanUser);
+    } catch {}
+  };
+
+  const handleGuestLogin = () => {
+    setCurrentUser('Guest');
+    setIsGuest(true);
+    setIsLoginModalOpen(false);
+    try {
+      localStorage.setItem('wonderland_is_guest', 'true');
+      localStorage.setItem('wonderland_user', 'Guest');
+    } catch {}
+  };
   // Persistence state
   const [posts, setPosts] = useState<Post[]>(() => {
     try {
@@ -32,6 +70,11 @@ export default function App() {
       try {
         const response = await fetch('/api');
         if (!response.ok) return;
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          // Dev server fallback returning index.html
+          return;
+        }
         const data = await response.json();
         console.log("Database results:", data);
         if (data && data.success && Array.isArray(data.posts) && data.posts.length > 0) {
@@ -237,12 +280,22 @@ export default function App() {
   };
 
   const handleOpenReplyModal = (tId: number, rPostId?: number) => {
+    if (isGuest) {
+      alert('You are currently browsing in Guest Mode. Please log in to reply or submit posts.');
+      setIsLoginModalOpen(true);
+      return;
+    }
     setReplyToThreadId(tId);
     setReplyToPostId(rPostId);
     setIsPostFormOpen(true);
   };
 
   const handleOpenNewThreadModal = () => {
+    if (isGuest) {
+      alert('You are currently browsing in Guest Mode. Please log in to submit new posts.');
+      setIsLoginModalOpen(true);
+      return;
+    }
     setReplyToThreadId(undefined);
     setReplyToPostId(undefined);
     setIsPostFormOpen(true);
@@ -345,6 +398,9 @@ export default function App() {
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         postCount={posts.length}
+        isGuest={isGuest}
+        currentUser={currentUser}
+        onOpenLoginModal={() => setIsLoginModalOpen(true)}
       />
 
       {/* Main Body View Switching */}
@@ -366,6 +422,7 @@ export default function App() {
             onEditTimestamp={handleEditTimestamp}
             onDeletePost={handleDeletePost}
             sfxEnabled={sfxEnabled}
+            isGuest={isGuest}
           />
         )}
 
@@ -378,6 +435,7 @@ export default function App() {
             onEditTimestamp={handleEditTimestamp}
             onDeletePost={handleDeletePost}
             sfxEnabled={sfxEnabled}
+            isGuest={isGuest}
           />
         )}
       </main>
@@ -388,6 +446,16 @@ export default function App() {
         onImportData={handleImportJournalJSON}
         onResetData={handleResetSampleData}
         onClearAllData={handleClearAllData}
+        sfxEnabled={sfxEnabled}
+        isGuest={isGuest}
+      />
+
+      {/* Login / Access Popup Modal */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onLogin={handleLogin}
+        onGuestLogin={handleGuestLogin}
+        onClose={() => setIsLoginModalOpen(false)}
         sfxEnabled={sfxEnabled}
       />
 
@@ -404,6 +472,9 @@ export default function App() {
         currentAttachment={currentAttachment}
         onClearAttachment={() => setCurrentAttachment(null)}
         sfxEnabled={sfxEnabled}
+        currentUser={currentUser}
+        isGuest={isGuest}
+        onOpenLoginModal={() => setIsLoginModalOpen(true)}
       />
 
       {/* Pixel Art Canvas Modal */}

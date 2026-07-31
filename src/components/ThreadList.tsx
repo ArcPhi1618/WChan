@@ -12,6 +12,7 @@ interface ThreadListProps {
   onEditTimestamp?: (postId: number, newTimestamp: string) => void;
   onDeletePost?: (postId: number) => void;
   sfxEnabled?: boolean;
+  isGuest?: boolean;
 }
 
 export const ThreadList: React.FC<ThreadListProps> = ({
@@ -21,7 +22,8 @@ export const ThreadList: React.FC<ThreadListProps> = ({
   onHoverQuotePost,
   onEditTimestamp,
   onDeletePost,
-  sfxEnabled = true
+  sfxEnabled = true,
+  isGuest = false
 }) => {
   if (threads.length === 0) {
     return (
@@ -53,6 +55,7 @@ export const ThreadList: React.FC<ThreadListProps> = ({
               onEditTimestamp={onEditTimestamp}
               onDeletePost={onDeletePost}
               sfxEnabled={sfxEnabled}
+              isGuest={isGuest}
             />
 
             {/* Omitted replies bar if more than 3 replies */}
@@ -85,6 +88,7 @@ export const ThreadList: React.FC<ThreadListProps> = ({
                   onEditTimestamp={onEditTimestamp}
                   onDeletePost={onDeletePost}
                   sfxEnabled={sfxEnabled}
+                  isGuest={isGuest}
                 />
               ))}
             </div>
