@@ -182,3 +182,9 @@ export async function onRequest(context) {
     });
   }
 }
+
+export default {
+  async fetch(request, env, ctx) {
+    return onRequest({ request, env, ctx });
+  }
+};
