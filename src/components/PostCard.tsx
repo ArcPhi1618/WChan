@@ -71,6 +71,7 @@ export const PostCard: React.FC<PostCardProps> = ({
 
   // Process text lines to detect greentext (>...) and quotes (>>No.123)
   const renderContentLines = (contentStr: string) => {
+    if (!contentStr) return null;
     const lines = contentStr.split('\n');
     return lines.map((line, idx) => {
       const trimmed = line.trim();
@@ -81,7 +82,7 @@ export const PostCard: React.FC<PostCardProps> = ({
         const refId = match ? parseInt(match[1], 10) : null;
 
         return (
-          <div key={idx} className="my-0.5">
+          <div key={idx} className="my-0.5 min-h-[1.2em]">
             <span
               onMouseEnter={(e) => refId && onHoverQuotePost?.(refId, e)}
               onMouseLeave={() => onHoverQuotePost?.(null)}
@@ -101,15 +102,15 @@ export const PostCard: React.FC<PostCardProps> = ({
       // Detect 4chan Greentext
       if (trimmed.startsWith('>')) {
         return (
-          <div key={idx} className="greentext font-bold my-0.5">
-            {line}
+          <div key={idx} className="greentext font-bold my-0.5 whitespace-pre-wrap min-h-[1.2em]">
+            {line || '\u00A0'}
           </div>
         );
       }
 
       return (
-        <div key={idx} className="my-0.5 whitespace-pre-wrap">
-          {line}
+        <div key={idx} className="my-0.5 whitespace-pre-wrap min-h-[1.2em]">
+          {line || '\u00A0'}
         </div>
       );
     });

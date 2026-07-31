@@ -407,7 +407,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fdf2f8] dark:bg-[#734F96] text-purple-950 dark:text-pink-100 font-pixel selection:bg-pink-300 selection:text-purple-950 dark:selection:bg-pink-500 dark:selection:text-slate-950 transition-colors relative">
+    <div className="min-h-screen flex flex-col bg-[#fdf2f8] dark:bg-[#734F96] text-purple-950 dark:text-pink-100 font-pixel selection:bg-pink-300 selection:text-purple-950 dark:selection:bg-pink-500 dark:selection:text-slate-950 transition-colors relative">
       {/* Top Header Navigation */}
       <Header
         currentCategory={currentCategory}
@@ -434,7 +434,7 @@ export default function App() {
       />
 
       {/* Main Body View Switching */}
-      <main className="pb-12">
+      <main className="flex-1 pb-12">
         {viewMode === 'catalog' && (
           <CatalogView
             threads={threads}

@@ -36,7 +36,7 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   return (
-    <footer className="w-full bg-[#f8e8f2] dark:bg-[#150a26] border-t-2 border-pink-300 dark:border-purple-900 font-pixel text-purple-950 dark:text-pink-100 mt-12 py-6 px-4">
+    <footer className="w-full bg-[#f8e8f2] dark:bg-[#150a26] border-t-2 border-pink-300 dark:border-purple-900 font-pixel text-purple-950 dark:text-pink-100 mt-auto py-6 px-4">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
         {/* Left Japanese Notice */}
         <div className="space-y-1 text-center md:text-left">
