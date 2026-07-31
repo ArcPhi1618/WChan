@@ -145,7 +145,7 @@ export const PixelCanvasModal: React.FC<PixelCanvasModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-xs font-pixel">
-      <div className="bg-[#fdf4f9] dark:bg-[#201333] border-4 border-pink-400 dark:border-purple-600 w-full max-w-2xl p-4 shadow-[0_0_25px_rgba(244,184,228,0.4)] text-purple-950 dark:text-pink-100 flex flex-col gap-3">
+      <div className="bg-[#fdf4f9] dark:bg-[#180a2e] border-4 border-pink-400 dark:border-purple-600 w-full max-w-2xl p-4 shadow-[0_0_25px_rgba(244,184,228,0.4)] text-purple-950 dark:text-pink-100 flex flex-col gap-3">
         {/* Title Bar */}
         <div className="bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-300 text-slate-950 px-3 py-1.5 flex justify-between items-center text-xs font-bold border-b-2 border-purple-800">
           <div className="flex items-center gap-2">

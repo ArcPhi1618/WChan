@@ -28,13 +28,13 @@ export const ThreadDetail: React.FC<ThreadDetailProps> = ({
   return (
     <div className="w-full max-w-5xl mx-auto p-4 font-pixel">
       {/* Top Bar Navigation */}
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-4 bg-[#2a1740] text-pink-100 p-2.5 border-b-2 border-purple-800">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-4 bg-[#1d0d38] text-pink-100 p-2.5 border-b-2 border-purple-900">
         <button
           onClick={() => {
             if (sfxEnabled) soundFx.playClick();
             onBack();
           }}
-          className="px-3 py-1.5 bg-purple-900/90 hover:bg-purple-800 text-pink-100 font-bold pixel-border-outset text-xs flex items-center gap-1.5 cursor-pointer"
+          className="px-3 py-1.5 bg-purple-950/90 hover:bg-purple-900 text-pink-100 font-bold pixel-border-outset text-xs flex items-center gap-1.5 cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Board [戻る]</span>

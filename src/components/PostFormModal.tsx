@@ -145,7 +145,7 @@ export const PostFormModal: React.FC<PostFormModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-xs font-pixel overflow-y-auto">
-      <div className="bg-[#fdf4f9] dark:bg-[#201333] border-4 border-pink-400 dark:border-purple-600 w-full max-w-2xl my-8 p-4 shadow-[0_0_25px_rgba(244,184,228,0.4)] text-purple-950 dark:text-pink-100 flex flex-col gap-3">
+      <div className="bg-[#fdf4f9] dark:bg-[#180a2e] border-4 border-pink-400 dark:border-purple-600 w-full max-w-2xl my-8 p-4 shadow-[0_0_25px_rgba(244,184,228,0.4)] text-purple-950 dark:text-pink-100 flex flex-col gap-3">
         {/* Title Bar */}
         <div className="bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-300 text-slate-950 px-3 py-1.5 flex justify-between items-center text-xs font-bold border-b-2 border-purple-800">
           <div className="flex items-center gap-2">
@@ -161,7 +161,7 @@ export const PostFormModal: React.FC<PostFormModalProps> = ({
 
         {/* 4chan Table Style Form Layout */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 text-xs">
-          <div className="bg-white/90 dark:bg-[#140b24] p-3 border-2 border-pink-300 dark:border-purple-800 space-y-2.5">
+          <div className="bg-white/90 dark:bg-[#120623] p-3 border-2 border-pink-300 dark:border-purple-800 space-y-2.5">
             {/* Name & Tripcode */}
             <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-2">
               <label className="font-bold sm:col-span-1 flex items-center gap-1">
@@ -174,7 +174,7 @@ export const PostFormModal: React.FC<PostFormModalProps> = ({
                   value={nameInput}
                   onChange={(e) => setNameInput(e.target.value)}
                   placeholder="Anonymous or Name#tripcode"
-                  className="w-full bg-pink-50/50 dark:bg-[#1a0f30] px-2 py-1 border border-pink-300 dark:border-purple-700 focus:outline-none focus:border-pink-500 text-xs font-mono"
+                  className="w-full bg-pink-50/50 dark:bg-[#160a2b] px-2 py-1 border border-pink-300 dark:border-purple-700 focus:outline-none focus:border-pink-500 text-xs font-mono"
                 />
                 <span className="text-[10px] text-purple-700 dark:text-pink-300/80">
                   Tip: Enter <code className="bg-pink-200 dark:bg-purple-900 px-1 text-slate-950 dark:text-pink-100">Name#password</code> for custom tripcode (e.g. !a8B1c2D)

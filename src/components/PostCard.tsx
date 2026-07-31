@@ -120,8 +120,8 @@ export const PostCard: React.FC<PostCardProps> = ({
       id={`post-${post.id}`}
       className={`p-3 font-pixel text-xs transition-colors border-2 ${
         isOp
-          ? 'bg-[#fdf4f9] dark:bg-[#241836] border-pink-300 dark:border-purple-700/80 shadow-sm'
-          : 'bg-white/90 dark:bg-[#1e142e] border-pink-200 dark:border-purple-800/70 ml-0 md:ml-6 my-2'
+          ? 'bg-[#fdf4f9] dark:bg-[#1c0e33] border-pink-300 dark:border-purple-800 shadow-sm'
+          : 'bg-white/90 dark:bg-[#160a29] border-pink-200 dark:border-purple-900/80 ml-0 md:ml-6 my-2'
       }`}
     >
       {/* Header Info Bar */}

@@ -99,7 +99,6 @@ export default function App() {
   });
 
   const [sfxEnabled, setSfxEnabled] = useState<boolean>(true);
-  const [scanlines, setScanlines] = useState<boolean>(false);
   const [currentCategory, setCurrentCategory] = useState<BoardCategory>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('board');
   const [activeThreadId, setActiveThreadId] = useState<number | null>(null);
@@ -378,7 +377,7 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen bg-[#fdf2f8] dark:bg-[#181825] text-purple-950 dark:text-pink-100 font-pixel selection:bg-pink-300 selection:text-purple-950 dark:selection:bg-pink-500 dark:selection:text-slate-950 transition-colors relative ${scanlines ? 'scanlines' : ''}`}>
+    <div className="min-h-screen bg-[#fdf2f8] dark:bg-[#734F96] text-purple-950 dark:text-pink-100 font-pixel selection:bg-pink-300 selection:text-purple-950 dark:selection:bg-pink-500 dark:selection:text-slate-950 transition-colors relative">
       {/* Top Header Navigation */}
       <Header
         currentCategory={currentCategory}
@@ -392,8 +391,6 @@ export default function App() {
         onToggleDarkMode={() => setDarkMode(!darkMode)}
         sfxEnabled={sfxEnabled}
         onToggleSfx={() => setSfxEnabled(!sfxEnabled)}
-        scanlines={scanlines}
-        onToggleScanlines={() => setScanlines(!scanlines)}
         onOpenNewPost={handleOpenNewThreadModal}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -497,7 +494,7 @@ export default function App() {
       {hoveredQuotePost && hoverPos && (
         <div
           style={{ top: Math.min(hoverPos.y, window.innerHeight - 200), left: Math.min(hoverPos.x, window.innerWidth - 320) }}
-          className="fixed z-50 w-80 p-3 bg-[#241836] text-pink-100 border-2 border-pink-400 shadow-[4px_4px_0px_#f4b8e4] font-pixel text-xs pointer-events-none"
+          className="fixed z-50 w-80 p-3 bg-[#180d2e] text-pink-100 border-2 border-pink-400 shadow-[4px_4px_0px_#f4b8e4] font-pixel text-xs pointer-events-none"
         >
           <div className="flex justify-between items-center text-[10px] text-pink-300 font-bold border-b border-purple-800/80 pb-1 mb-1">
             <span>PREVIEW &gt;&gt;No.{hoveredQuotePost.id}</span>

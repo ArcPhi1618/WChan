@@ -56,7 +56,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       setIsLoading(false);
 
       if (res.success && res.user) {
-        if (sfxEnabled) soundFx.playPostSuccess();
+        if (sfxEnabled) soundFx.playPostChime();
         onLogin(res.user.username);
       } else {
         if (sfxEnabled) soundFx.playClick();
@@ -98,7 +98,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       setIsLoading(false);
 
       if (res.success) {
-        if (sfxEnabled) soundFx.playPostSuccess();
+        if (sfxEnabled) soundFx.playPostChime();
         setSuccessMsg(res.message);
         setUsername(resetUsername);
         setPassword(newPassword);
@@ -124,10 +124,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto font-pixel">
-      <div className="w-full max-w-md bg-[#fef2f8] dark:bg-[#1d1233] border-4 border-pink-400 dark:border-purple-600 shadow-[0_0_30px_rgba(244,184,228,0.7)] p-0 rounded-none overflow-hidden relative">
+      <div className="w-full max-w-md bg-[#fef2f8] dark:bg-[#180a2e] border-4 border-pink-400 dark:border-purple-600 shadow-[0_0_30px_rgba(244,184,228,0.7)] p-0 rounded-none overflow-hidden relative">
         
         {/* Top Retro System Header Bar */}
-        <div className="bg-[#2a1740] text-pink-200 px-4 py-2.5 flex justify-between items-center border-b-2 border-purple-800 font-bold text-xs">
+        <div className="bg-[#1d0d38] text-pink-200 px-4 py-2.5 flex justify-between items-center border-b-2 border-purple-800 font-bold text-xs">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-pink-400 animate-pulse shadow-[0_0_8px_#f4b8e4]"></span>
             <span className="tracking-wider text-pink-300">USER AUTHENTICATION PORTAL</span>
@@ -151,7 +151,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         </div>
 
         {/* Tab Navigation */}
-        <div className="grid grid-cols-2 bg-[#1b0e33] border-b-2 border-purple-800 text-xs font-bold">
+        <div className="grid grid-cols-2 bg-[#140828] border-b-2 border-purple-800 text-xs font-bold">
           <button
             type="button"
             onClick={() => {
@@ -162,7 +162,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             }}
             className={`py-2 flex items-center justify-center gap-1.5 cursor-pointer transition-colors ${
               activeTab === 'login'
-                ? 'bg-[#fef2f8] dark:bg-[#1d1233] text-pink-600 dark:text-pink-300 border-b-2 border-pink-500'
+                ? 'bg-[#fef2f8] dark:bg-[#180a2e] text-pink-600 dark:text-pink-300 border-b-2 border-pink-500'
                 : 'text-purple-400 hover:text-pink-200'
             }`}
           >

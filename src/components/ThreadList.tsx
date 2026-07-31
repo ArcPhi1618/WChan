@@ -28,7 +28,7 @@ export const ThreadList: React.FC<ThreadListProps> = ({
   if (threads.length === 0) {
     return (
       <div className="w-full max-w-5xl mx-auto p-8 text-center font-pixel text-purple-800 dark:text-pink-300">
-        <div className="bg-[#fdf4f9] dark:bg-[#201333] border-2 border-dashed border-pink-300 dark:border-purple-700 p-8 space-y-2">
+        <div className="bg-[#fdf4f9] dark:bg-[#180a2f] border-2 border-dashed border-pink-300 dark:border-purple-800 p-8 space-y-2">
           <p className="text-base font-bold text-pink-600 dark:text-pink-300">[掲示板] No journal threads found in this category.</p>
           <p className="text-xs">Click "NEW POST [新規投稿]" at the top to create the first entry!</p>
         </div>

@@ -16,7 +16,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
 }) => {
   return (
     <div className="w-full max-w-6xl mx-auto p-4 font-pixel">
-      <div className="bg-[#2a1740] text-pink-200 px-3 py-1.5 text-xs font-bold mb-4 flex justify-between items-center border-b-2 border-purple-800">
+      <div className="bg-[#1d0d38] text-pink-200 px-3 py-1.5 text-xs font-bold mb-4 flex justify-between items-center border-b-2 border-purple-900">
         <span className="flex items-center gap-1.5">
           <span className="bg-pink-400 text-slate-950 px-1.5 py-0.5 font-bold shadow-[0_0_6px_#f4b8e4]">カタログ</span>
           <span>JOURNAL CATALOG [全スレッド一覧] — {threads.length} Threads</span>
@@ -36,10 +36,10 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
                 if (sfxEnabled) soundFx.playClick();
                 onOpenThread(thread.opPost.threadId);
               }}
-              className="bg-[#fdf4f9] dark:bg-[#201333] border-2 border-pink-300 dark:border-purple-800 hover:border-pink-500 dark:hover:border-pink-400 p-2 flex flex-col justify-between cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-[3px_3px_0px_#f4b8e4] group"
+              className="bg-[#fdf4f9] dark:bg-[#180a2f] border-2 border-pink-300 dark:border-purple-900 hover:border-pink-500 dark:hover:border-pink-400 p-2 flex flex-col justify-between cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-[3px_3px_0px_#f4b8e4] group"
             >
               {/* Media Thumbnail */}
-              <div className="w-full h-32 bg-pink-100/50 dark:bg-[#130b21] border border-pink-200 dark:border-purple-900 mb-2 flex items-center justify-center overflow-hidden relative">
+              <div className="w-full h-32 bg-pink-100/50 dark:bg-[#110624] border border-pink-200 dark:border-purple-900 mb-2 flex items-center justify-center overflow-hidden relative">
                 {op.attachment?.url ? (
                   <img
                     src={op.attachment.url}

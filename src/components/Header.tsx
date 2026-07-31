@@ -6,7 +6,6 @@ import {
   Moon, 
   Volume2, 
   VolumeX, 
-  Tv, 
   Grid, 
   List, 
   PlusCircle, 
@@ -28,8 +27,8 @@ interface HeaderProps {
   onToggleDarkMode: () => void;
   sfxEnabled: boolean;
   onToggleSfx: () => void;
-  scanlines: boolean;
-  onToggleScanlines: () => void;
+  scanlines?: boolean;
+  onToggleScanlines?: () => void;
   onOpenNewPost: () => void;
   searchQuery: string;
   onSearchChange: (q: string) => void;
@@ -92,9 +91,9 @@ export const Header: React.FC<HeaderProps> = ({
   ];
 
   return (
-    <header className="w-full bg-[#fce7f3] dark:bg-[#1f1333] border-b-2 border-pink-300 dark:border-purple-800 text-purple-950 dark:text-pink-100 transition-colors">
+    <header className="w-full bg-[#fce7f3] dark:bg-[#150a26] border-b-2 border-pink-300 dark:border-purple-900 text-purple-950 dark:text-pink-100 transition-colors">
       {/* Top 16-Bit System Status Bar */}
-      <div className="bg-[#2a1740] text-pink-200 text-xs px-3 py-1 font-pixel flex flex-wrap justify-between items-center gap-2 border-b border-purple-900/80">
+      <div className="bg-[#1d0d38] text-pink-200 text-xs px-3 py-1 font-pixel flex flex-wrap justify-between items-center gap-2 border-b border-purple-900/80">
         <div className="flex items-center gap-3">
           <span className="text-pink-300 font-bold flex items-center gap-1">
             <span className="inline-block w-2 h-2 rounded-full bg-pink-400 animate-pulse shadow-[0_0_6px_#f4b8e4]"></span>
@@ -206,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onToggleDarkMode();
               }}
               title="Toggle Dark Mode (Reduces Eye Strain)"
-              className="px-2.5 py-1.5 bg-pink-100 dark:bg-[#2e1d45] hover:bg-pink-200 dark:hover:bg-[#3b2659] text-purple-900 dark:text-pink-200 pixel-border-outset flex items-center gap-1 cursor-pointer transition-colors"
+              className="px-2.5 py-1.5 bg-pink-100 dark:bg-[#20103b] hover:bg-pink-200 dark:hover:bg-[#2b164f] text-purple-900 dark:text-pink-200 pixel-border-outset flex items-center gap-1 cursor-pointer transition-colors"
             >
               {darkMode ? <Sun className="w-3.5 h-3.5 text-amber-300" /> : <Moon className="w-3.5 h-3.5 text-purple-400" />}
               <span className="hidden sm:inline">{darkMode ? 'LIGHT' : 'DARK'}</span>
@@ -216,27 +215,10 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onToggleSfx}
               title="Toggle 16-bit Sound Effects"
-              className="px-2.5 py-1.5 bg-pink-100 dark:bg-[#2e1d45] hover:bg-pink-200 dark:hover:bg-[#3b2659] text-purple-900 dark:text-pink-200 pixel-border-outset flex items-center gap-1 cursor-pointer transition-colors"
+              className="px-2.5 py-1.5 bg-pink-100 dark:bg-[#20103b] hover:bg-pink-200 dark:hover:bg-[#2b164f] text-purple-900 dark:text-pink-200 pixel-border-outset flex items-center gap-1 cursor-pointer transition-colors"
             >
               {sfxEnabled ? <Volume2 className="w-3.5 h-3.5 text-pink-500 dark:text-pink-300" /> : <VolumeX className="w-3.5 h-3.5 text-purple-400" />}
               <span className="hidden sm:inline">SFX</span>
-            </button>
-
-            {/* Scanlines Toggle */}
-            <button
-              onClick={() => {
-                if (sfxEnabled) soundFx.playClick();
-                onToggleScanlines();
-              }}
-              title="Toggle CRT Scanline Overlay Effect"
-              className={`px-2.5 py-1.5 pixel-border-outset flex items-center gap-1 cursor-pointer transition-colors ${
-                scanlines
-                  ? 'bg-purple-800 text-pink-200'
-                  : 'bg-pink-100 dark:bg-[#2e1d45] text-purple-900 dark:text-pink-200'
-              }`}
-            >
-              <Tv className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">CRT</span>
             </button>
           </div>
         </div>
@@ -254,7 +236,7 @@ export const Header: React.FC<HeaderProps> = ({
                   className={`px-3 py-1.5 border-2 flex items-center gap-1.5 cursor-pointer transition-colors ${
                     isActive
                       ? 'bg-pink-400 text-slate-950 border-purple-400 font-bold shadow-[0_0_8px_rgba(244,184,228,0.5)]'
-                      : 'bg-white/80 dark:bg-[#201333] text-purple-900 dark:text-pink-200 border-pink-200 dark:border-purple-800 hover:bg-pink-100 dark:hover:bg-[#2e1d47]'
+                      : 'bg-white/80 dark:bg-[#180a2f] text-purple-900 dark:text-pink-200 border-pink-200 dark:border-purple-900 hover:bg-pink-100 dark:hover:bg-[#231245]'
                   }`}
                 >
                   {cat.icon}
@@ -274,13 +256,13 @@ export const Header: React.FC<HeaderProps> = ({
                 placeholder="Search journal..."
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full bg-white dark:bg-[#18102a] text-purple-950 dark:text-pink-100 pl-7 pr-2 py-1 text-xs border-2 border-pink-300 dark:border-purple-800 focus:outline-none focus:border-pink-500"
+                className="w-full bg-white dark:bg-[#110624] text-purple-950 dark:text-pink-100 pl-7 pr-2 py-1 text-xs border-2 border-pink-300 dark:border-purple-900 focus:outline-none focus:border-pink-500"
               />
               <Search className="w-3.5 h-3.5 text-pink-400 absolute left-2 top-1.5" />
             </div>
 
             {/* View Mode Toggle */}
-            <div className="flex border-2 border-pink-300 dark:border-purple-800 bg-pink-100 dark:bg-[#201333]">
+            <div className="flex border-2 border-pink-300 dark:border-purple-900 bg-pink-100 dark:bg-[#180a2f]">
               <button
                 onClick={() => {
                   if (sfxEnabled) soundFx.playClick();

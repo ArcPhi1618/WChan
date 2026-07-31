@@ -1,18 +1,28 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --font-pixel: 'DotGothic16', 'PixelMplus10', 'PixelMplus12', 'VT323', monospace;
     --font-heading: 'Press Start 2P', 'DotGothic16', monospace;
   }
 
-  body {
+  html, body {
     font-family: var(--font-pixel);
     -webkit-font-smoothing: none;
     -moz-osx-font-smoothing: unset;
     font-smooth: never;
     letter-spacing: 0.02em;
     image-rendering: pixelated;
+    background-color: #fdf2f8;
+    color: #3b0764;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  html.dark, html.dark body {
+    background-color: #734F96;
+    color: #fce7f3;
   }
 }
 
@@ -56,19 +66,19 @@
 }
 
 .dark .pixel-border-inset {
-  border: 2px solid #4a2b60;
-  border-right-color: #7d48a0;
-  border-bottom-color: #7d48a0;
-  border-top-color: #241335;
-  border-left-color: #241335;
+  border: 2px solid #3d1e57;
+  border-right-color: #6a3693;
+  border-bottom-color: #6a3693;
+  border-top-color: #1a0a2a;
+  border-left-color: #1a0a2a;
 }
 
 .dark .pixel-border-outset {
-  border: 2px solid #5b3576;
-  border-right-color: #201030;
-  border-bottom-color: #201030;
-  border-top-color: #8b5aa8;
-  border-left-color: #8b5aa8;
+  border: 2px solid #4a2569;
+  border-right-color: #180928;
+  border-bottom-color: #180928;
+  border-top-color: #7d44ab;
+  border-left-color: #7d44ab;
 }
 
 /* 4chan Greentext Styling - Pastel Mint */
@@ -84,7 +94,7 @@
 .scanlines {
   background: linear-gradient(
     rgba(244, 184, 228, 0.03) 50%, 
-    rgba(24, 20, 37, 0.18) 50%
+    rgba(17, 9, 32, 0.25) 50%
   );
   background-size: 100% 4px;
   pointer-events: none;
@@ -101,7 +111,7 @@
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: #1e132b;
+  background: #110920;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -110,8 +120,8 @@
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #cba6f7;
-  border: 2px solid #2e1844;
+  background: #b886f8;
+  border: 2px solid #1c0e33;
 }
 
 /* Pixel Canvas cursor */
