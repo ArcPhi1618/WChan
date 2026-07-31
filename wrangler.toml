@@ -1,4 +1,4 @@
-name = "wonderchan"
+name = "wchan"
 compatibility_date = "2024-01-01"
 
 [assets]
@@ -8,4 +8,4 @@ directory = "./dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "wchan_db1"
-database_id = "f89f2766-65a7-4034-83af-263c0e8de51a"
+database_id = "c1bc2b38-b29b-44f8-9d83-f4789443ab34"
