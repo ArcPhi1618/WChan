@@ -53,13 +53,23 @@ export async function onRequest(context) {
     // 3. Handle GET Requests (Fetch all posts)
     if (method === "GET") {
       const { results } = await DB.prepare("SELECT * FROM posts ORDER BY id DESC").all();
-      const formattedPosts = (results || []).map((p) => ({
-        ...p,
-        isSticky: Boolean(p.isSticky),
-        isClosed: Boolean(p.isClosed),
-        isVerticalText: Boolean(p.isVerticalText),
-        attachment: p.attachment ? JSON.parse(p.attachment) : undefined
-      }));
+      const formattedPosts = (results || []).map((p) => {
+        let attachment = undefined;
+        if (p.attachment) {
+          try {
+            attachment = typeof p.attachment === 'string' ? JSON.parse(p.attachment) : p.attachment;
+          } catch (e) {
+            attachment = undefined;
+          }
+        }
+        return {
+          ...p,
+          isSticky: Boolean(p.isSticky),
+          isClosed: Boolean(p.isClosed),
+          isVerticalText: Boolean(p.isVerticalText),
+          attachment
+        };
+      });
 
       return new Response(
         JSON.stringify({ success: true, results: formattedPosts, posts: formattedPosts }),
@@ -67,7 +77,8 @@ export async function onRequest(context) {
           status: 200,
           headers: { 
             "Content-Type": "application/json", 
-            "Access-Control-Allow-Origin": "*" 
+            "Access-Control-Allow-Origin": "*",
+            "Cache-Control": "no-store, no-cache, must-revalidate"
           }
         }
       );

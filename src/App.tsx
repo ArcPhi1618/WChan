@@ -50,13 +50,16 @@ export default function App() {
       localStorage.setItem('wonderland_user', 'Guest');
     } catch {}
   };
+  const [isDbConnected, setIsDbConnected] = useState<boolean>(false);
+  const [isSyncing, setIsSyncing] = useState<boolean>(false);
+
   // Persistence state
   const [posts, setPosts] = useState<Post[]>(() => {
     try {
       const saved = localStorage.getItem('16bit_journal_posts_v2');
       if (saved !== null) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
     } catch {
       // Fallback
@@ -64,27 +67,47 @@ export default function App() {
     return INITIAL_POSTS;
   });
 
-  // Fetch posts from Cloudflare D1 API backend if available
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const response = await fetch('/api');
-        if (!response.ok) return;
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          // Dev server fallback returning index.html
-          return;
-        }
-        const data = await response.json();
-        console.log("Database results:", data);
-        if (data && data.success && Array.isArray(data.posts) && data.posts.length > 0) {
-          setPosts(data.posts);
-        }
-      } catch (error) {
-        console.error("Failed to connect to the database API:", error);
+  // Sync posts from Cloudflare D1 API backend
+  const syncPosts = async (silent = false) => {
+    if (!silent) setIsSyncing(true);
+    try {
+      const response = await fetch('/api', { cache: 'no-store' });
+      if (!response.ok) return;
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        return;
       }
+      const data = await response.json();
+      if (data && data.success && Array.isArray(data.posts)) {
+        setIsDbConnected(true);
+        if (data.posts.length > 0) {
+          setPosts(data.posts);
+        } else {
+          // If DB is connected but empty, seed INITIAL_POSTS to D1 so all devices start with initial posts
+          for (const post of INITIAL_POSTS) {
+            await fetch('/api', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ post })
+            }).catch(() => {});
+          }
+          setPosts(INITIAL_POSTS);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to connect to the database API:", error);
+    } finally {
+      if (!silent) setIsSyncing(false);
     }
-    loadData();
+  };
+
+  useEffect(() => {
+    syncPosts(false);
+    // Poll every 4 seconds so posts created on other devices automatically show up
+    const interval = setInterval(() => {
+      syncPosts(true);
+    }, 4000);
+    return () => clearInterval(interval);
   }, []);
 
   // Dark mode state (Default to dark mode or user preference for reduced eye strain)
@@ -210,7 +233,8 @@ export default function App() {
   // Post Submission Handler
   const handleCreatePost = (newPostData: Omit<Post, 'id'>) => {
     const highestId = posts.reduce((max, p) => Math.max(max, p.id), 84920100);
-    const newPostId = highestId + 1;
+    // Use unique timestamp-derived ID to prevent collisions across devices
+    const newPostId = Math.max(Date.now(), highestId + 1);
 
     let finalThreadId = newPostData.threadId;
     if (!finalThreadId || finalThreadId === 0) {
@@ -232,7 +256,9 @@ export default function App() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ post: fullPost })
-    }).catch((err) => console.error("Error persisting post to D1:", err));
+    })
+    .then(() => syncPosts(true))
+    .catch((err) => console.error("Error persisting post to D1:", err));
 
     // If starting new thread, jump to it or stay in board
     if (viewMode === 'threadDetail' && activeThreadId !== finalThreadId) {
@@ -249,7 +275,9 @@ export default function App() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'updateTimestamp', id: postId, timestamp: newTimestamp })
-    }).catch((err) => console.error("Error updating timestamp in D1:", err));
+    })
+    .then(() => syncPosts(true))
+    .catch((err) => console.error("Error updating timestamp in D1:", err));
   };
 
   const handleDeletePost = (postId: number) => {
@@ -270,7 +298,9 @@ export default function App() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'delete', id: postId })
-    }).catch((err) => console.error("Error deleting post from D1:", err));
+    })
+    .then(() => syncPosts(true))
+    .catch((err) => console.error("Error deleting post from D1:", err));
 
     if (activeThreadId === postId) {
       setActiveThreadId(null);
@@ -398,6 +428,9 @@ export default function App() {
         isGuest={isGuest}
         currentUser={currentUser}
         onOpenLoginModal={() => setIsLoginModalOpen(true)}
+        isDbConnected={isDbConnected}
+        isSyncing={isSyncing}
+        onManualSync={() => syncPosts(false)}
       />
 
       {/* Main Body View Switching */}

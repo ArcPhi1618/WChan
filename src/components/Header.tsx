@@ -15,7 +15,9 @@ import {
   Palette,
   Music,
   Quote,
-  KeyRound
+  KeyRound,
+  RefreshCw,
+  Database
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -36,6 +38,9 @@ interface HeaderProps {
   isGuest?: boolean;
   currentUser?: string;
   onOpenLoginModal?: () => void;
+  isDbConnected?: boolean;
+  isSyncing?: boolean;
+  onManualSync?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -55,7 +60,10 @@ export const Header: React.FC<HeaderProps> = ({
   postCount,
   isGuest = false,
   currentUser = 'User',
-  onOpenLoginModal
+  onOpenLoginModal,
+  isDbConnected = false,
+  isSyncing = false,
+  onManualSync
 }) => {
   const [clockStr, setClockStr] = useState<string>('');
 
@@ -101,6 +109,31 @@ export const Header: React.FC<HeaderProps> = ({
           </span>
           <span className="hidden sm:inline text-purple-400">|</span>
           <span className="hidden sm:inline text-cyan-300 font-mono">: 🌸 | MOOD: 1.618% | [{postCount} POSTS]</span>
+          <span className="hidden sm:inline text-purple-400">|</span>
+          <span className={`text-[10px] font-pixel font-bold flex items-center gap-1.5 px-2 py-0.5 border ${
+            isSyncing 
+              ? 'text-amber-300 bg-amber-950/80 border-amber-600' 
+              : isDbConnected 
+              ? 'text-emerald-300 bg-emerald-950/80 border-emerald-600' 
+              : 'text-pink-300 bg-purple-900/80 border-purple-700'
+          }`}>
+            <Database className="w-3 h-3 text-emerald-400" />
+            {isSyncing ? 'SYNCING...' : isDbConnected ? 'D1 LIVE' : 'D1 CONNECTED'}
+          </span>
+          {onManualSync && (
+            <button
+              onClick={() => {
+                if (sfxEnabled) soundFx.playClick();
+                onManualSync();
+              }}
+              disabled={isSyncing}
+              title="Sync posts with Cloudflare D1 database across devices"
+              className="px-1.5 py-0.5 bg-purple-900 hover:bg-purple-800 text-pink-200 font-pixel cursor-pointer text-[10px] transition-colors border border-purple-700 flex items-center gap-1 active:translate-y-0.5"
+            >
+              <RefreshCw className={`w-3 h-3 ${isSyncing ? 'animate-spin text-amber-300' : 'text-pink-300'}`} />
+              SYNC
+            </button>
+          )}
         </div>
         <div className="flex items-center gap-4 text-xs font-mono">
           {/* User / Guest Status Badge */}
