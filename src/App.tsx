@@ -26,6 +26,24 @@ export default function App() {
     return INITIAL_POSTS;
   });
 
+  // Fetch posts from Cloudflare D1 API backend if available
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const response = await fetch('/api');
+        if (!response.ok) return;
+        const data = await response.json();
+        console.log("Database results:", data);
+        if (data && data.success && Array.isArray(data.posts) && data.posts.length > 0) {
+          setPosts(data.posts);
+        }
+      } catch (error) {
+        console.error("Failed to connect to the database API:", error);
+      }
+    }
+    loadData();
+  }, []);
+
   // Dark mode state (Default to dark mode or user preference for reduced eye strain)
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     try {
@@ -167,6 +185,13 @@ export default function App() {
     setPosts((prev) => [fullPost, ...prev]);
     setCurrentAttachment(null);
 
+    // Sync with backend API (D1)
+    fetch('/api', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ post: fullPost })
+    }).catch((err) => console.error("Error persisting post to D1:", err));
+
     // If starting new thread, jump to it or stay in board
     if (viewMode === 'threadDetail' && activeThreadId !== finalThreadId) {
       setActiveThreadId(finalThreadId);
@@ -177,6 +202,12 @@ export default function App() {
     setPosts((prev) =>
       prev.map((p) => (p.id === postId ? { ...p, timestamp: newTimestamp } : p))
     );
+
+    fetch('/api', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'updateTimestamp', id: postId, timestamp: newTimestamp })
+    }).catch((err) => console.error("Error updating timestamp in D1:", err));
   };
 
   const handleDeletePost = (postId: number) => {
@@ -192,6 +223,12 @@ export default function App() {
         return prevPosts.filter((p) => p.id !== postId);
       }
     });
+
+    fetch('/api', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'delete', id: postId })
+    }).catch((err) => console.error("Error deleting post from D1:", err));
 
     if (activeThreadId === postId) {
       setActiveThreadId(null);
