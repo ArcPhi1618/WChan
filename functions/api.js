@@ -32,6 +32,24 @@ export async function onRequest(context) {
   }
 
   try {
+    // Ensure table exists on first run
+    await DB.prepare(`
+      CREATE TABLE IF NOT EXISTS posts (
+        id INTEGER PRIMARY KEY,
+        threadId INTEGER NOT NULL,
+        subject TEXT DEFAULT '',
+        name TEXT DEFAULT 'Anonymous',
+        tripcode TEXT DEFAULT '',
+        timestamp TEXT NOT NULL,
+        content TEXT NOT NULL,
+        category TEXT DEFAULT 'all',
+        attachment TEXT,
+        isSticky INTEGER DEFAULT 0,
+        isClosed INTEGER DEFAULT 0,
+        isVerticalText INTEGER DEFAULT 0
+      )
+    `).run();
+
     // 3. Handle GET Requests (Fetch all posts)
     if (method === "GET") {
       const { results } = await DB.prepare("SELECT * FROM posts ORDER BY id DESC").all();
